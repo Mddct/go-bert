@@ -41,7 +41,6 @@ func (f wenetTokenize) Tokenize(text string) []string {
 			}
 			toks = append(toks, wordpiece)
 		}
-
 	}
 	return toks
 }
@@ -62,9 +61,21 @@ func newVocab(filename string) vocab.Dict{
 	return vocab.New(table)
 }
 
+func NewWenetTokenize(filename string) tokenize.VocabTokenizer{
+	voca := newVocab(filename)
+	return newwenetTokenize(voca)
+}
 func main() {
-	voca := newVocab("voca.txt")
-	wenettokenize := newwenetTokenize(voca)
-	toks := wenettokenize.Tokenize("good morningbug good你好吗")
-	fmt.Println(strings.Join(toks, " "))
+
+	scan := bufio.NewScanner(os.Stdin)
+	tokenizer := NewWenetTokenize("voca.txt")
+	for scan.Scan(){
+		segs := strings.Split(scan.Text(), "\t")
+		if len(segs) !=2 {
+			continue
+		}
+		path, ref := segs[0],segs[1]
+		fmt.Printf("%s\t%s\n", path,strings.Join(tokenizer.Tokenize(ref), " "))
+
+ 	}
 }
