@@ -75,6 +75,7 @@ func main() {
 			continue
 		}
 		path, ref := segs[0],segs[1]
+		ref = strings.ReplaceAll(ref, " ", "")
 		fmt.Printf("%s\t%s\n", path,strings.Join(tokenizer.Tokenize(ref), " "))
 
  	}
